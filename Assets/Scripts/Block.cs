@@ -44,7 +44,7 @@ public class Block : MonoBehaviour
                 AddToGrid();
                 CheckForLines();
                 this.enabled = false;
-                Spawner.instance.CreateNewBlock();
+                Spawner.instance.CreateNewBlock(Spawner.instance.nextBlockIndex);
             }
             previosTime = Time.time;
         }
