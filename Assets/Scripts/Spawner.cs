@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -19,11 +20,10 @@ public class Spawner : MonoBehaviour
     public GameObject nextObjectPanel;
 
     public Vector2 speed = new Vector2(1f, 1f);
-    public int nextBlockIndex { get; set; }
+
+    System.Random random = new System.Random();
     void Start()
     {
-        GameManager.TestData();
-
         CreateNewBlock();
     }
 
@@ -35,20 +35,20 @@ public class Spawner : MonoBehaviour
 
     public void CreateNewBlock(bool useNext = true)
     {
-        int r = 0;
+        int r = -1;
         if (useNext)
-            r = nextBlockIndex;
+            r = PlayerPrefs.GetInt("nextBlockIndex");
 
-        if (r.Equals(0))
-            r = Random.Range(0, blocks.Length);
+        if (r.Equals(-1))
+            r = random.Next(blocks.ToList().Count());
 
         activeObject = blocks[r];
         activeBlock = activeObject.GetComponent<Block>();
 
-        Instantiate(activeObject, new Vector3(5f, 16, 1f), Quaternion.identity);
-        nextBlockIndex = Random.Range(0, blocks.Length);
+        Instantiate(activeObject, new Vector3(5f, 20, 1f), Quaternion.identity);
+        PlayerPrefs.SetInt("nextBlockIndex", random.Next(blocks.ToList().Count()));
 
-        GameObject nextObject = Resources.Load("Models/Prefabs/BlockEmpty/" + blocks[nextBlockIndex].name, typeof(GameObject)) as GameObject; ;
+        GameObject nextObject = Resources.Load("Models/Prefabs/BlockEmpty/" + blocks[PlayerPrefs.GetInt("nextBlockIndex")].name, typeof(GameObject)) as GameObject; ;
         var _nextOb = Instantiate(nextObject, nextObjectPanel.transform.position, Quaternion.identity);
         _nextOb.transform.parent = nextObjectPanel.transform;
 

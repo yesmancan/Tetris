@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public TextMeshProUGUI point;
+    public GameObject gameOverPanel;
     #region Singleton
     public static GameManager instance;
     public GameManager()
@@ -13,53 +14,19 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public static void TestData()
-    {
-        GetToData();
-        PostToData();
-    }
-
     public void PlayGame()
     {
-        TestData();
         SceneManager.LoadScene(0);
     }
-
-    static IEnumerator PostToData()
+    public void BackToMenu()
     {
-        WWWForm form = new WWWForm();
-
-        string address = "https://tetris-8247d.firebaseio.com/";
-        using (UnityWebRequest www = UnityWebRequest.Post(address, form))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log("Form upload complete!");
-            }
-        }
+        SceneManager.LoadScene(1);
     }
-    static IEnumerator GetToData()
+    public void SetPoint()
     {
-        string address = "https://tetris-8247d.firebaseio.com/";
-        using (UnityWebRequest www = UnityWebRequest.Get(address))
+        if (point != null)
         {
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log(www.downloadHandler.text);
-                Debug.Log("Form upload complete!");
-            }
+            point.text = "Point : " + PlayerPrefs.GetInt("point");
         }
     }
 }

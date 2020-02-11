@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Block : MonoBehaviour
 {
@@ -9,7 +7,7 @@ public class Block : MonoBehaviour
     public float fallTime = 0.8f;
 
     public static int width = 10;
-    public static int height = 20;
+    public static int height = 30;
 
     private static Transform[,] grid = new Transform[20, height];
 
@@ -51,14 +49,30 @@ public class Block : MonoBehaviour
     }
     void CheckForLines()
     {
+        int multiple = 0;
+
         for (int i = height - 1; i >= 0; i--)
         {
             if (HasLine(i))
             {
+                multiple++;
                 DeleteLine(i);
                 RowDown(i);
             }
         }
+
+        if (multiple == 4)
+            PlayerPrefs.SetInt("point", PlayerPrefs.GetInt("point") + (1200 * PlayerPrefs.GetInt("level", 1)));
+        else if (multiple == 3)
+            PlayerPrefs.SetInt("point", PlayerPrefs.GetInt("point") + (300 * PlayerPrefs.GetInt("level", 1)));
+        else if (multiple == 2)
+            PlayerPrefs.SetInt("point", PlayerPrefs.GetInt("point") + (100 * PlayerPrefs.GetInt("level", 1)));
+        else if (multiple == 1)
+            PlayerPrefs.SetInt("point", PlayerPrefs.GetInt("point") + (40 * PlayerPrefs.GetInt("level", 1)));
+
+        if (multiple > 0)
+            GameManager.instance.SetPoint();
+
     }
     bool HasLine(int i)
     {
@@ -100,11 +114,12 @@ public class Block : MonoBehaviour
             {
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
-                Debug.Log("X : " + roundedX + " Y : " + roundedY);
                 grid[roundedX, roundedY] = children;
             }
             catch (System.Exception ex)
             {
+                previosTime = 0;
+                GameManager.instance.gameOverPanel.SetActive(true);
                 Debug.LogError(ex.Message);
             }
         }
