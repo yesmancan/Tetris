@@ -9,10 +9,14 @@ public class Block : MonoBehaviour
     public static int width = 10;
     public static int height = 30;
 
-    private static Transform[,] grid = new Transform[20, height];
+    private static bool gameRunningStatus = true;
+    private static readonly Transform[,] grid = new Transform[20, height];
 
     void Update()
     {
+        if (!gameRunningStatus)
+            return;
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.position += new Vector3(1, 0, 0);
@@ -42,6 +46,10 @@ public class Block : MonoBehaviour
                 AddToGrid();
                 CheckForLines();
                 this.enabled = false;
+
+                if (!gameRunningStatus)
+                    return;
+
                 Spawner.instance.CreateNewBlock(true);
             }
             previosTime = Time.time;
@@ -114,11 +122,24 @@ public class Block : MonoBehaviour
             {
                 int roundedX = Mathf.RoundToInt(children.transform.position.x);
                 int roundedY = Mathf.RoundToInt(children.transform.position.y);
-                grid[roundedX, roundedY] = children;
+                Transform _grid = grid[roundedX, roundedY];
+                if (_grid == null)
+                {
+                    grid[roundedX, roundedY] = children;
+                }
+                else
+                {
+                    Time.timeScale = 0;
+                    gameRunningStatus = false;
+                    GameManager.instance.gameOverPanel.SetActive(true);
+                    Debug.Log("GameOver");
+                    break;
+                }
+
             }
             catch (System.Exception ex)
             {
-                previosTime = 0;
+                Time.timeScale = 0;
                 GameManager.instance.gameOverPanel.SetActive(true);
                 Debug.LogError(ex.Message);
             }

@@ -33,7 +33,7 @@ public class Spawner : MonoBehaviour
             CreateNewBlock(false);
     }
 
-    public void CreateNewBlock(bool useNext = true)
+    public void CreateNewBlock(bool useNext = false)
     {
         int r = -1;
         if (useNext)

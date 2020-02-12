@@ -14,13 +14,21 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public void PlayGame()
+    public static void PlayGame()
     {
-        SceneManager.LoadScene(0);
+        PlayerPrefs.SetInt("point", 0);
+        SceneManager.LoadScene(1);
+        LevelLoader.instance.LoadLevel(1);
     }
+
+    void Update()
+    {
+
+    }
+
     public void BackToMenu()
     {
-        SceneManager.LoadScene(1);
+        LevelLoader.instance.LoadLevel(1);
     }
     public void SetPoint()
     {

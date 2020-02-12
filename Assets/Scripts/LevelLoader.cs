@@ -7,6 +7,13 @@ using UnityEngine.UI;
 
 public class LevelLoader : MonoBehaviour
 {
+    #region Singleton
+    public static LevelLoader instance;
+    public LevelLoader()
+    {
+        instance = this;
+    }
+    #endregion
 
     public GameObject loadingScreen;
     public Slider slider;
