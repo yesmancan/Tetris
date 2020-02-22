@@ -14,7 +14,7 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        if (!gameRunningStatus)
+        if (!gameRunningStatus && Time.timeScale == 0)
             return;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
