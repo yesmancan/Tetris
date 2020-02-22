@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI point;
     public GameObject gameOverPanel;
+    public LevelLoader _levelLoader;
     #region Singleton
     public static GameManager instance;
     public GameManager()
@@ -14,11 +15,12 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+
     public static void PlayGame()
     {
         PlayerPrefs.SetInt("point", 0);
         SceneManager.LoadScene(1);
-        LevelLoader.instance.LoadLevel(1);
+        Time.timeScale = 1;
     }
 
     void Update()
@@ -28,7 +30,8 @@ public class GameManager : MonoBehaviour
 
     public void BackToMenu()
     {
-        LevelLoader.instance.LoadLevel(1);
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1;
     }
     public void SetPoint()
     {
