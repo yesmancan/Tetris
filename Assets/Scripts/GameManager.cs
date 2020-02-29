@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public GameObject stopButton;
     public GameObject playButton;
 
+    private Block _activeBlock;
+
     public GameObject gameOverPanel;
     public LevelLoader _levelLoader;
     #region Singleton
@@ -29,6 +31,15 @@ public class GameManager : MonoBehaviour
 
         SetPoint();
     }
+    public void Update()
+    {
+        _activeBlock = Spawner.instance.activeBlock;
+    }
+    public void LeftClick() { _activeBlock.LeftClick(); }
+    public void RightClick() { _activeBlock.RightClick(); }
+    public void UpClick() { _activeBlock.UpClick(); }
+    public void DownClick() { _activeBlock.DownClick(); }
+
     public void StopAndPlay()
     {
         if (Time.timeScale == 0)

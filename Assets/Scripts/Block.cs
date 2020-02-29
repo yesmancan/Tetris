@@ -13,6 +13,11 @@ public class Block : MonoBehaviour
     private static bool gameRunningStatus = true;
     private static readonly Transform[,] grid = new Transform[20, height];
 
+    private static bool leftActive = false;
+    private static bool rightActive = false;
+    private static bool downActive = false;
+    private static bool upActive = false;
+
     void Update()
     {
         fallTime = fallCrosser / PlayerPrefs.GetInt("level", 1);
@@ -20,27 +25,36 @@ public class Block : MonoBehaviour
         if (!gameRunningStatus && Time.timeScale == 0)
             return;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || leftActive)
         {
             transform.position += new Vector3(1, 0, 0);
             if (!ValidMove())
                 transform.position -= new Vector3(1, 0, 0);
 
+            leftActive = false;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || rightActive)
         {
             transform.localPosition += new Vector3(-1, 0, 0);
             if (!ValidMove())
                 transform.position -= new Vector3(-1, 0, 0);
+
+            rightActive = false;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || upActive)
         {
             transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
             if (!ValidMove())
                 transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+
+            upActive = false;
         }
 
-        if (Time.time - previosTime > fallTime)
+        float _fallTime = fallTime;
+        if (Input.GetKeyDown(KeyCode.DownArrow) || downActive)
+            _fallTime = fallTime / 10;
+
+        if (Time.time - previosTime > _fallTime)
         {
             transform.position += new Vector3(0, -1, 0);
             if (!ValidMove())
@@ -56,46 +70,25 @@ public class Block : MonoBehaviour
                 Spawner.instance.CreateNewBlock(true);
             }
             previosTime = Time.time;
+            downActive = false;
         }
     }
 
     public void LeftClick()
     {
-        transform.position += new Vector3(1, 0, 0);
-        if (!ValidMove())
-            transform.position -= new Vector3(1, 0, 0);
+        leftActive = true;
     }
     public void RightClick()
     {
-        transform.localPosition += new Vector3(-1, 0, 0);
-        if (!ValidMove())
-            transform.position -= new Vector3(-1, 0, 0);
+        rightActive = true;
     }
     public void UpClick()
     {
-        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
-        if (!ValidMove())
-            transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+        upActive = true;
     }
     public void DownClick()
     {
-        if (Time.time - previosTime > fallTime / 10)
-        {
-            transform.position += new Vector3(0, -1, 0);
-            if (!ValidMove())
-            {
-                transform.position -= new Vector3(0, -1, 0);
-                AddToGrid();
-                CheckForLines();
-                this.enabled = false;
-
-                if (!gameRunningStatus)
-                    return;
-
-                Spawner.instance.CreateNewBlock(true);
-            }
-            previosTime = Time.time;
-        }
+        downActive = true;
     }
 
     void CheckForLines()
