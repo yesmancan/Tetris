@@ -326,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationPoint: {x: 0, y: 0, z: 0}
   fallTime: 0.8
+  fallCrosser: 1
 --- !u!64 &7390046836496644338
 MeshCollider:
   m_ObjectHideFlags: 0

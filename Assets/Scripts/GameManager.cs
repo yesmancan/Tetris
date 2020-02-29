@@ -1,10 +1,16 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI point;
+    public TextMeshProUGUI level;
+    public TextMeshProUGUI lines;
+    public GameObject stopButton;
+    public GameObject playButton;
+
     public GameObject gameOverPanel;
     public LevelLoader _levelLoader;
     #region Singleton
@@ -14,18 +20,53 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
     #endregion
+    public void Awake()
+    {
+        PlayerPrefs.SetInt("point", 0);
+        PlayerPrefs.SetInt("lines", 0);
+        PlayerPrefs.SetInt("level", 1);
+        PlayerPrefs.Save();
 
+        SetPoint();
+    }
+    public void StopAndPlay()
+    {
+        if (Time.timeScale == 0)
+        {
+            if (stopButton != null)
+            {
+                stopButton.SetActive(true);
+            }
+            if (playButton != null)
+            {
+                playButton.SetActive(false);
+            }
 
+            Time.timeScale = 1;
+        }
+        else
+        {
+            if (stopButton != null)
+            {
+                stopButton.SetActive(false);
+            }
+            if (playButton != null)
+            {
+                playButton.SetActive(true);
+            }
+
+            Time.timeScale = 0;
+        }
+    }
     public static void PlayGame()
     {
         PlayerPrefs.SetInt("point", 0);
+        PlayerPrefs.SetInt("lines", 0);
+        PlayerPrefs.SetInt("level", 1);
+        PlayerPrefs.Save();
+
         SceneManager.LoadScene(1);
         Time.timeScale = 1;
-    }
-
-    void Update()
-    {
-
     }
 
     public void BackToMenu()
@@ -36,8 +77,12 @@ public class GameManager : MonoBehaviour
     public void SetPoint()
     {
         if (point != null)
-        {
-            point.text = "Point : " + PlayerPrefs.GetInt("point");
-        }
+            point.text = "SCORE \n" + PlayerPrefs.GetInt("point");
+
+        if (level != null)
+            level.text = "LEVEL \n" + PlayerPrefs.GetInt("level");
+
+        if (lines != null)
+            lines.text = "LINES \n" + PlayerPrefs.GetInt("lines");
     }
 }

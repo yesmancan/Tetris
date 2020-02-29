@@ -1,19 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Block : MonoBehaviour
 {
     public Vector3 rotationPoint;
     private float previosTime;
-    public float fallTime = 0.8f;
-
+    public float fallTime = 1f;
+    public float fallCrosser = 1f;
     public static int width = 10;
     public static int height = 30;
-
+    private static int cleanRowCount = 0;
     private static bool gameRunningStatus = true;
     private static readonly Transform[,] grid = new Transform[20, height];
 
     void Update()
     {
+        fallTime = fallCrosser / PlayerPrefs.GetInt("level", 1);
+
         if (!gameRunningStatus && Time.timeScale == 0)
             return;
 
@@ -37,7 +40,7 @@ public class Block : MonoBehaviour
                 transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
         }
 
-        if (Time.time - previosTime > (Input.GetKeyDown(KeyCode.DownArrow) ? fallTime / 10 : fallTime))
+        if (Time.time - previosTime > fallTime)
         {
             transform.position += new Vector3(0, -1, 0);
             if (!ValidMove())
@@ -55,6 +58,46 @@ public class Block : MonoBehaviour
             previosTime = Time.time;
         }
     }
+
+    public void LeftClick()
+    {
+        transform.position += new Vector3(1, 0, 0);
+        if (!ValidMove())
+            transform.position -= new Vector3(1, 0, 0);
+    }
+    public void RightClick()
+    {
+        transform.localPosition += new Vector3(-1, 0, 0);
+        if (!ValidMove())
+            transform.position -= new Vector3(-1, 0, 0);
+    }
+    public void UpClick()
+    {
+        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+        if (!ValidMove())
+            transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+    }
+    public void DownClick()
+    {
+        if (Time.time - previosTime > fallTime / 10)
+        {
+            transform.position += new Vector3(0, -1, 0);
+            if (!ValidMove())
+            {
+                transform.position -= new Vector3(0, -1, 0);
+                AddToGrid();
+                CheckForLines();
+                this.enabled = false;
+
+                if (!gameRunningStatus)
+                    return;
+
+                Spawner.instance.CreateNewBlock(true);
+            }
+            previosTime = Time.time;
+        }
+    }
+
     void CheckForLines()
     {
         int multiple = 0;
@@ -64,6 +107,15 @@ public class Block : MonoBehaviour
             if (HasLine(i))
             {
                 multiple++;
+                cleanRowCount++;
+                PlayerPrefs.SetInt("lines", cleanRowCount);
+                int _level = ((cleanRowCount / 10) == 0 ? 1 : cleanRowCount / 10);
+                if (cleanRowCount > 10)
+                {
+                    int _level_ = _level + 1;
+                    PlayerPrefs.SetInt("level", _level_);
+                }
+
                 DeleteLine(i);
                 RowDown(i);
             }
@@ -135,7 +187,6 @@ public class Block : MonoBehaviour
                     Debug.Log("GameOver");
                     break;
                 }
-
             }
             catch (System.Exception ex)
             {

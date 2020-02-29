@@ -48,11 +48,17 @@ public class Spawner : MonoBehaviour
         Instantiate(activeObject, new Vector3(5f, 20, 1f), Quaternion.identity);
         PlayerPrefs.SetInt("nextBlockIndex", random.Next(blocks.ToList().Count()));
 
-        GameObject nextObject = Resources.Load("Models/Prefabs/BlockEmpty/" + blocks[PlayerPrefs.GetInt("nextBlockIndex")].name, typeof(GameObject)) as GameObject; ;
-        var _nextOb = Instantiate(nextObject, nextObjectPanel.transform.position, Quaternion.identity);
-        _nextOb.transform.parent = nextObjectPanel.transform;
+        foreach (Transform child in nextObjectPanel.transform)
+        {
+            child.gameObject.SetActive(false);
+            if (child.name == blocks[PlayerPrefs.GetInt("nextBlockIndex")].name)
+                child.gameObject.SetActive(true);
+        }
+        //GameObject nextObject = Resources.Load("Models/Prefabs/BlockEmpty/" + blocks[PlayerPrefs.GetInt("nextBlockIndex")].name, typeof(GameObject)) as GameObject; ;
+        //var _nextOb = Instantiate(nextObject, nextObjectPanel.transform.position, Quaternion.identity);
+        //_nextOb.transform.parent = nextObjectPanel.transform;
 
-        if (nextObjectPanel.gameObject.transform.childCount > 1)
-            Destroy(nextObjectPanel.gameObject.transform.GetChild(0).gameObject);
+        //if (nextObjectPanel.gameObject.transform.childCount > 1)
+        //    Destroy(nextObjectPanel.gameObject.transform.GetChild(0).gameObject);
     }
 }
