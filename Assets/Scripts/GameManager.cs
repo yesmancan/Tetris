@@ -1,7 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,11 +9,14 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI lines;
     public GameObject stopButton;
     public GameObject playButton;
+    public GameObject stopMusicButton;
+    public GameObject playMusicButton;
 
     private Block _activeBlock;
 
     public GameObject gameOverPanel;
     public LevelLoader _levelLoader;
+
     #region Singleton
     public static GameManager instance;
     public GameManager()
@@ -30,6 +32,12 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
 
         SetPoint();
+
+
+        if ((Screen.height == 2960 && Screen.width == 1440) || (Screen.height == 2340 && Screen.width == 1080))
+        {
+            Camera.main.fieldOfView = 70;
+        }
     }
     public void Update()
     {
@@ -69,6 +77,20 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
         }
     }
+
+    public void MuteAndPlayMusic(bool mute)
+    {
+        if (mute)
+        {
+            stopMusicButton.SetActive(true);
+            playMusicButton.SetActive(false);
+        }
+        else
+        {
+            stopMusicButton.SetActive(false);
+            playMusicButton.SetActive(true);
+        }
+    }
     public static void PlayGame()
     {
         PlayerPrefs.SetInt("point", 0);
@@ -82,7 +104,7 @@ public class GameManager : MonoBehaviour
 
     public void BackToMenu()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }
     public void SetPoint()
