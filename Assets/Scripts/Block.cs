@@ -20,12 +20,28 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        fallTime = fallCrosser / PlayerPrefs.GetInt("level", 1);
+        if (PlayerPrefs.GetInt("level", 1) == 1)
+            fallTime = 1f;
+        else if (PlayerPrefs.GetInt("level", 1) == 2)
+            fallTime = .8f;
+        else if (PlayerPrefs.GetInt("level", 1) == 3)
+            fallTime = .6f;
+        else if (PlayerPrefs.GetInt("level", 1) == 4)
+            fallTime = .5f;
+        else if (PlayerPrefs.GetInt("level", 1) == 5)
+            fallTime = .4f;
+        else if (PlayerPrefs.GetInt("level", 1) == 6)
+            fallTime = .3f;
+        else if (PlayerPrefs.GetInt("level", 1) == 7)
+            fallTime = .2f;
+        else
+            fallTime = .1f;
+
 
         if (!gameRunningStatus && Time.timeScale == 0)
             return;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || leftActive)
+        if ((Input.GetKeyDown(KeyCode.LeftArrow) || leftActive) && Time.timeScale != 0)
         {
             transform.position += new Vector3(1, 0, 0);
             if (!ValidMove())
@@ -33,7 +49,7 @@ public class Block : MonoBehaviour
 
             leftActive = false;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || rightActive)
+        else if ((Input.GetKeyDown(KeyCode.RightArrow) || rightActive) && Time.timeScale != 0)
         {
             transform.localPosition += new Vector3(-1, 0, 0);
             if (!ValidMove())
@@ -41,7 +57,7 @@ public class Block : MonoBehaviour
 
             rightActive = false;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) || upActive)
+        else if ((Input.GetKeyDown(KeyCode.UpArrow) || upActive) && Time.timeScale != 0)
         {
             transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
             if (!ValidMove())
@@ -51,7 +67,7 @@ public class Block : MonoBehaviour
         }
 
         float _fallTime = fallTime;
-        if (Input.GetKeyDown(KeyCode.DownArrow) || downActive)
+        if ((Input.GetKeyDown(KeyCode.DownArrow) || downActive) && Time.timeScale != 0)
             _fallTime = fallTime / 10;
 
         if (Time.time - previosTime > _fallTime)
