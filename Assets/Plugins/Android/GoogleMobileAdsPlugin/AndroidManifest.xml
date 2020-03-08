@@ -4,5 +4,6 @@
     <uses-library android:required="false" android:name="org.apache.http.legacy" />
     <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-6488202776624573~9857903798" />
     <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true" />
+    <meta-data android:name="com.google.andorid.gms.ads.AD_MANAGER_APP" android:value="true"></meta-data>
   </application>
 </manifest>

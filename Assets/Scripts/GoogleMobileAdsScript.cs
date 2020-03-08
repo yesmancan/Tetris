@@ -7,11 +7,34 @@ using UnityEngine;
 public class GoogleMobileAdsScript : MonoBehaviour
 {
     private BannerView bannerView;
+    private InterstitialAd fullscreenAd;
 
+    private readonly string appID = "ca-app-pub-6488202776624573~9857903798";
     private readonly string adBannerUnitId = "ca-app-pub-6488202776624573/5150649824";
+    private readonly string adInterstitialUnitId = "ca-app-pub-6488202776624573/3261841325f";
+    private void Awake()
+    {
+        MobileAds.Initialize(appID);
+    }
     public void Start()
     {
-        this.RequestBanner();
+        try
+        {
+            this.RequestFullScreenAds();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+
+        try
+        {
+            this.RequestBanner();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
     }
     //private AdRequest CreateAdRequest()
     //{
@@ -27,6 +50,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
     //}
     private void RequestBanner()
     {
+
         this.bannerView = new BannerView(adBannerUnitId, AdSize.SmartBanner, AdPosition.Bottom);
 
         // Called when an ad request has successfully loaded.
@@ -41,14 +65,22 @@ public class GoogleMobileAdsScript : MonoBehaviour
         this.bannerView.OnAdLeavingApplication += this.HandleOnAdLeavingApplication;
 
         // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder()
-            .AddKeyword("game")
-            .AddKeyword("tetris")
-            .Build();
+        AdRequest request = new AdRequest.Builder().Build();
 
         // Load the banner with the request.
         this.bannerView.LoadAd(request);
         bannerView.Show();
+    }
+    private void RequestFullScreenAds()
+    {
+        if (this.fullscreenAd != null)
+        {
+            this.fullscreenAd.Destroy();
+        }
+
+        fullscreenAd = new InterstitialAd(adInterstitialUnitId);
+        AdRequest request = new AdRequest.Builder().Build();
+        fullscreenAd.LoadAd(request);
     }
 
     public void HandleOnAdLoaded(object sender, EventArgs args)
@@ -58,8 +90,10 @@ public class GoogleMobileAdsScript : MonoBehaviour
 
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
-                            + args.Message);
+        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: " + args.Message);
+
+        ExampleCoroutine(10);
+        this.RequestBanner();
     }
 
     public void HandleOnAdOpened(object sender, EventArgs args)
@@ -75,5 +109,10 @@ public class GoogleMobileAdsScript : MonoBehaviour
     public void HandleOnAdLeavingApplication(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleAdLeavingApplication event received");
+    }
+
+    IEnumerator ExampleCoroutine(int second)
+    {
+        yield return new WaitForSeconds(second);
     }
 }
