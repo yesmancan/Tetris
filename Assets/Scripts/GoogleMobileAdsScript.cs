@@ -25,7 +25,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
         AppID = "ca-app-pub-6488202776624573~9857903798",
         BannerID = "ca-app-pub-6488202776624573/5150649824",
         RewardID = "",
-        InterstitialID = "ca-app-pub-6488202776624573/3261841325f",
+        InterstitialID = "ca-app-pub-6488202776624573/3261841325",
 
     };
     [Header("IOS")]
@@ -72,6 +72,9 @@ public class GoogleMobileAdsScript : MonoBehaviour
         this.rewardBasedVideo.OnAdRewarded += this.RewardBasedVideoRewarded;
         this.rewardBasedVideo.OnAdClosed += this.RewardBasedVideoClosed;
         this.rewardBasedVideo.OnAdLeavingApplication += this.RewardBasedVideoLeftApplication;
+
+        RequestBanner(AdPosition.Bottom);
+        RequestInterstitial();
     }
     public void DestroyBanner()
     {
@@ -98,8 +101,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
         }
 
         // Create a 320x50 banner at the top of the screen.
-        this.bannerView = new BannerView(adUnitId, AdSize.SmartBanner, poz);
-
+        this.bannerView = new BannerView(adUnitId, AdSize.Banner, poz);
         // Register for ad events.
         this.bannerView.OnAdLoaded += this.AdLoaded;
         this.bannerView.OnAdFailedToLoad += this.AdFailedToLoad;
@@ -145,7 +147,6 @@ public class GoogleMobileAdsScript : MonoBehaviour
         // Load an interstitial ad.
         this.interstitial.LoadAd(this.CreateAdRequest());
     }
-    // public UnityEngine.UI.Text Yazi;
     public void RequestRewardBasedVideo()
     {
 #if UNITY_EDITOR
@@ -160,7 +161,6 @@ public class GoogleMobileAdsScript : MonoBehaviour
 #endif
         this.rewardBasedVideo.LoadAd(this.CreateAdRequest(), adUnitId);
     }
-
     public void ShowInterstitial()
     {
         if (this.interstitial.IsLoaded())
@@ -185,6 +185,20 @@ public class GoogleMobileAdsScript : MonoBehaviour
             Debug.Log("Reward based video ad is not ready yet");
         }
     }
+
+    public IEnumerator RequestAds(string type)
+    {
+        yield return new WaitForSeconds(1f);
+        if (type == "RewardBasedVideo")
+        {
+            RequestRewardBasedVideo();
+        }
+        if (type == "Interstitial")
+        {
+            RequestInterstitial();
+        }
+    }
+
     #region Banner callback rs
 
     public void AdLoaded(object sender, EventArgs args)
@@ -219,6 +233,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
     public void InterstitialLoaded(object sender, EventArgs args)
     {
         Debug.Log("InterstitialLoaded event received");
+        ShowInterstitial();
     }
 
     public void InterstitialFailedToLoad(object sender, AdFailedToLoadEventArgs args)

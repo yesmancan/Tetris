@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject playButton;
     public GameObject stopMusicButton;
     public GameObject playMusicButton;
+
+    public GameObject showDialog;
 
     private Block _activeBlock;
 
@@ -32,7 +35,6 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
 
         SetPoint();
-
 
         if ((Screen.height == 2960 && Screen.width == 1440) || (Screen.height == 2340 && Screen.width == 1080))
         {
@@ -84,11 +86,13 @@ public class GameManager : MonoBehaviour
         {
             stopMusicButton.SetActive(true);
             playMusicButton.SetActive(false);
+            PlayerPrefs.SetInt("playMusicActive", 0);
         }
         else
         {
             stopMusicButton.SetActive(false);
             playMusicButton.SetActive(true);
+            PlayerPrefs.SetInt("playMusicActive", 1);
         }
     }
     public static void PlayGame()
@@ -101,12 +105,38 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
         Time.timeScale = 1;
     }
+    public void PlayGameClick()
+    {
+        PlayerPrefs.SetInt("point", 0);
+        PlayerPrefs.SetInt("lines", 0);
+        PlayerPrefs.SetInt("level", 1);
+        PlayerPrefs.Save();
 
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1;
+    }
     public void BackToMenu()
     {
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }
+    public void RefreshOpenDialog()
+    {
+        if (showDialog != null)
+        {
+            showDialog.SetActive(true);
+            StopAndPlay();
+        }
+    }
+    public void CloseOpenDialog()
+    {
+        if (showDialog != null)
+        {
+            showDialog.SetActive(false);
+            StopAndPlay();
+        }
+    }
+
     public void SetPoint()
     {
         if (point != null)

@@ -190,10 +190,10 @@ public class Block : MonoBehaviour
                 }
                 else
                 {
+                    AdsRequests.admob.ShowInterstitial();
+
                     Time.timeScale = 0;
                     gameRunningStatus = false;
-
-                    AdsRequests.admob.RequestInterstitial();
 
                     GameManager.instance.gameOverPanel.SetActive(true);
                     Debug.Log("GameOver");
