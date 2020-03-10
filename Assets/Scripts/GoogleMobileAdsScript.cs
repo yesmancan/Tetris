@@ -249,7 +249,6 @@ public class GoogleMobileAdsScript : MonoBehaviour
 
     public void InterstitialClosed(object sender, EventArgs args)
     {
-        RequestInterstitial();
         Debug.Log("InterstitialClosed event received");
     }
 
