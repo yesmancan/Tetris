@@ -80,7 +80,7 @@ public class Block : MonoBehaviour
                 CheckForLines();
                 this.enabled = false;
 
-                if (!gameRunningStatus)
+                if (!gameRunningStatus && Time.timeScale == 0)
                     return;
 
                 Spawner.instance.CreateNewBlock(true);
@@ -192,6 +192,9 @@ public class Block : MonoBehaviour
                 {
                     Time.timeScale = 0;
                     gameRunningStatus = false;
+
+                    AdsRequests.admob.RequestInterstitial();
+
                     GameManager.instance.gameOverPanel.SetActive(true);
                     Debug.Log("GameOver");
                     break;
