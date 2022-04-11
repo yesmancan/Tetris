@@ -1,5 +1,5 @@
 # Tetris
-Unity 3D tetris
+Unity with C# 3D Tetris Game Development
 [Play Store Dowload Link](https://play.google.com/store/apps/details?id=com.leblebigames.tetris&gl=TR)
 
 ## Screen Shot 1
