@@ -36,10 +36,10 @@ public class GameManager : MonoBehaviour
 
         SetPoint();
 
-        if ((Screen.height == 2960 && Screen.width == 1440) || (Screen.height == 2340 && Screen.width == 1080))
-        {
-            Camera.main.fieldOfView = 70;
-        }
+        //if ((Screen.height == 2960 && Screen.width == 1440) || (Screen.height == 2340 && Screen.width == 1080))
+        //{
+        //    Camera.main.fieldOfView = 70;
+        //}
     }
     public void Update()
     {
