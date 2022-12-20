@@ -18,9 +18,6 @@ apply plugin: 'com.android.library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-// Android Resolver Dependencies Start
-    implementation 'com.google.android.gms:play-services-ads:19.0.0' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
-// Android Resolver Dependencies End
 **DEPS**}
 
 // Android Resolver Exclusions Start
@@ -59,6 +56,7 @@ android {
     }
 
     aaptOptions {
+        noCompress = ['.ress', '.resource', '.obb'] + unityStreamingAssets.tokenize(', ')
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**PACKAGING_OPTIONS**
 }**REPOSITORIES****SOURCE_BUILD_SETUP**

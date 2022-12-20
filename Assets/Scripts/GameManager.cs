@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     public void RightClick() { _activeBlock.RightClick(); }
     public void UpClick() { _activeBlock.UpClick(); }
     public void DownClick() { _activeBlock.DownClick(); }
+    public void FastDownClick() { _activeBlock.FastDownClick(); }
 
     public void StopAndPlay()
     {

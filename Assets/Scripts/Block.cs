@@ -16,6 +16,7 @@ public class Block : MonoBehaviour
     private static bool leftActive = false;
     private static bool rightActive = false;
     private static bool downActive = false;
+    private static bool fastDownActive = false;
     private static bool upActive = false;
 
     void Update()
@@ -70,6 +71,9 @@ public class Block : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.DownArrow) || downActive) && Time.timeScale != 0)
             _fallTime = fallTime / 10;
 
+        if ((Input.GetKeyDown(KeyCode.S) || fastDownActive) && Time.timeScale != 0)
+            _fallTime = fallTime / 100;
+
         if (Time.time - previosTime > _fallTime)
         {
             transform.position += new Vector3(0, -1, 0);
@@ -83,6 +87,7 @@ public class Block : MonoBehaviour
                 if (!gameRunningStatus && Time.timeScale == 0)
                     return;
 
+                fastDownActive=false;
                 Spawner.instance.CreateNewBlock(true);
             }
             previosTime = Time.time;
@@ -105,6 +110,10 @@ public class Block : MonoBehaviour
     public void DownClick()
     {
         downActive = true;
+    }
+    public void FastDownClick()
+    {
+        fastDownActive = true;
     }
 
     void CheckForLines()
@@ -190,7 +199,7 @@ public class Block : MonoBehaviour
                 }
                 else
                 {
-                    AdsRequests.admob.ShowInterstitial();
+                    // AdsRequests.admob.ShowInterstitial();
 
                     Time.timeScale = 0;
                     gameRunningStatus = false;
